@@ -1,0 +1,16 @@
+.header {
+    background-color: #d1cfcf;
+}
+
+.div-header {
+    height: 64px;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    width: 1400px;
+    max-width: calc(100% - 30px);
+}
+
+.logo > img {
+    width: 120px;
+}
