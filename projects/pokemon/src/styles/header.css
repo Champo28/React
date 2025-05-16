@@ -1,5 +1,6 @@
 .header {
     background-color: #d1cfcf;
+    padding-top: 8px;
 }
 
 .div-header {
@@ -9,8 +10,39 @@
     justify-content: space-between;
     width: 1400px;
     max-width: calc(100% - 30px);
+    margin: 0 auto;
 }
 
 .logo > img {
     width: 120px;
+}
+
+.search-container {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 30px;
+    box-shadow: 1px 4px 4px #000;
+
+    @media screen and (max-width : 500px){
+        width: 50%;
+    }
+}
+
+.search-container > div {
+    width: 20%;
+    height: 30px;
+    display: grid;
+    place-items: center;
+}
+
+.search-container > input {
+    width: 80%;
+    padding: 4px 10px;
+    height: 30px;
+    border: none;
+    outline: none;
 }

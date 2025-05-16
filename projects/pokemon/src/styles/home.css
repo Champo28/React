@@ -1,4 +1,4 @@
-.card-container{
+.card-container {
     width: 1400px;
     max-width: calc(100% - 30px);
     margin: 0 auto;
@@ -7,4 +7,10 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 25px;
     padding-bottom: 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
 }

@@ -4,18 +4,31 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    transition-duration: 200ms;
+}
+
+.card:hover > img {
+    margin-top: -15px;
+    transform: scale(1.15);
+    transition-duration: 300ms;
+    /*filter: drop-shadow(1px 1px 0px black);*/
 }
 
 .poke-img {
-    width: 160px;
+    width: 180px;
     margin: 0 auto;
     z-index: 20;
+    transition: all 0.3s ease-in-out;
 }
 
 .sub-card {
     position: absolute;
     border-radius: 10px;
-    background-color: rgb(98, 255, 0);
     min-height: 370px;
     padding: 15px; 
     width: 100%;
@@ -39,7 +52,6 @@
 
 .poke-name {
     padding-top: 8px;
-    padding: 1px 4px;
     font-size: 1.2rem;
     text-transform: capitalize;
     display: block;
@@ -54,4 +66,67 @@
     text-transform: capitalize;
     display: block;
     color: #484848;
+}
+
+.poke-stats {
+    margin: 4px 0;
+    width: 100%;
+    padding: 5px;
+}
+
+.stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-name {
+    text-transform: capitalize;
+    width: 90px;
+    color: #484848;
+}
+
+.stat-value {
+    width: 22px;
+    text-align: end;
+    color: #484848;
+}
+
+.poke-type {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+}
+
+.color-type {
+    text-transform: capitalize;
+    border: 1px solid #424242;
+    border-radius: 4px;
+    text-align: center;
+    height: 20px;
+    line-height: 17px;
+    width: 50px;
+    color: white;
+}
+
+.poke-evolutions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.evolution-container > img{
+    width: 80px;
+
+}
+    
+.evolution-container > img:hover{
+    transform: scale(1.2);
+    transition-duration: 200ms;
+    z-index: 50;
+}
+
+.evolution-container > h6{
+    text-transform: capitalize;
+    text-align: center;
 }

@@ -1,51 +1,64 @@
-import { useEffect, useState } from 'react'
-import { URL_POKEMON, URL_SPECIES } from '../api/apiRest'
+import { useState } from 'react'
+import { usePokemon } from '../hooks/usePokemon'
 import '../styles/card.css'
 
 export const PokemonCard = ({ pokemon }) => {
-  const [pokemonInfo, setPokemonInfo] = useState(null)
-  const [pokemonSpecies, setPokemonSpecies] = useState(null)
+  const { pokemonInfo, pokemonSpecies, pokemonEvolutions } = usePokemon({ pokemon })
+  const [shiny, setShiny] = useState(false)
 
-  useEffect(() => {
-    async function getPokemonData () {
-      const res = await fetch(`${URL_POKEMON}/${pokemon.name}`)
-      const data = await res.json()
-      console.log(data)
-      setPokemonInfo(data)
+  const formatId = (id) => {
+    let res = '#'
+    for (let i = id.toString().length; i < 3; i++) {
+      res += '0'
     }
-
-    getPokemonData()
-  }, [pokemon.name])
-
-  useEffect(() => {
-    async function getPokemonSpecies () {
-      const url = pokemon.url.split('/')
-      const res = await fetch(`${URL_SPECIES}/${url[6]}`)
-      const data = await res.json()
-      console.log(data)
-      setPokemonSpecies(data)
-    }
-
-    getPokemonSpecies()
-  }, [pokemon.url])
+    return res + id
+  }
 
   return (
     <>
-      {pokemonInfo && (
+      {pokemonInfo && pokemonSpecies && (
         <div className='card'>
-          <img className='poke-img' src={pokemonInfo.sprites?.other['official-artwork'].front_default} alt='pokemon' />
-          <div className='sub-card'>
-            <strong className='poke-id'>{pokemonInfo.id}</strong>
+          <img
+            className='poke-img'
+            src={shiny ? pokemonInfo.sprites.front_shiny : pokemonInfo.sprites.front_default} alt='pokemon'
+          />
+          <div className={`bg-${pokemonInfo.types[0].type.name} sub-card`}>
+            <strong className='poke-id'>{formatId(pokemonInfo.id)}</strong>
             <strong className='poke-name'>{pokemonInfo.name}</strong>
             <h4 className='poke-height'>
-              {pokemonInfo.height / 10} m
+              Height: {pokemonInfo.height / 10} m
             </h4>
             <h4 className='poke-weight'>
-              {pokemonInfo.weight / 10} kg
+              Weight: {pokemonInfo.weight / 10} kg
             </h4>
             <h4 className='poke-habitat'>
-              habitat
+              Habitat: {pokemonSpecies.habitat.name}
             </h4>
+            <div className='poke-stats'>
+              {pokemonInfo?.stats.map((stat, index) => {
+                return (
+                  <h6 key={index} className='stats'>
+                    <span className='stat-name'>{stat.stat.name} </span>
+                    <progress value={stat.base_stat} max={160} />
+                    <span className='stat-value'> {stat.base_stat} </span>
+                  </h6>
+                )
+              })}
+            </div>
+            <div className='poke-type'>
+              {pokemonInfo?.types.map((type, index) => {
+                return <h6 key={index} className={`bg-${type.type.name} color-type`}>{type.type.name}</h6>
+              })}
+            </div>
+            <button onClick={() => setShiny(!shiny)}>Shiny form</button>
+            <div className='poke-evolutions'>
+              {pokemonEvolutions?.map((evolution, index) => (
+                <div key={index} className='evolution-container'>
+                  <img src={evolution.img} alt='evolution' />
+                  <h6>{evolution.name}</h6>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

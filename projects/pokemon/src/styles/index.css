@@ -7,3 +7,71 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.bg-grass {
+    background: rgb(75, 204, 78);
+}
+
+.bg-fire {
+    background: rgb(253, 124, 33);
+}
+
+.bg-water {
+    background: rgb(70, 147, 196);
+}
+
+.bg-bug{
+    background: rgb(115, 159, 62);
+}
+
+.bg-electric {
+    background: rgb(236, 212, 51);
+}
+
+.bg-earth {
+    background: rgb(171, 151, 76);
+}
+
+.bg-rock {
+    background: rgb(165, 139, 34);
+}
+
+.bg-ghost {
+    background: rgb(123, 98, 163);
+}
+
+.bg-poison {
+    background: rgb(185, 127, 201);
+}
+
+.bg-psychic {
+    background: rgb(240, 102, 187);
+}
+
+.bg-fairy {
+    background: rgb(255, 183, 232);
+}
+
+.bg-dark {
+    background: rgb(112, 112, 112);
+}
+
+.bg-steel {
+    background: rgb(160, 182, 185);
+}
+
+.bg-ice {
+    background: rgb(82, 196, 232);
+}
+
+.bg-fight {
+    background: rgb(214, 132, 38);
+}
+
+.bg-dragon {
+    background: #1111;
+}
+
+.bg-normal {
+    background: rgb(163, 173, 175);
+}
