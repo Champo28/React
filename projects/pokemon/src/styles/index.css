@@ -64,7 +64,7 @@
     background: rgb(82, 196, 232);
 }
 
-.bg-fight {
+.bg-fighting {
     background: rgb(214, 132, 38);
 }
 
@@ -74,4 +74,16 @@
 
 .bg-normal {
     background: rgb(163, 173, 175);
+}
+
+.bg-flying {
+    background: rgb(145, 183, 228);
+}
+
+.bg-dragon {
+    background: rgb(77, 166, 151);
+}
+
+.bg-ground {
+    background: rgb(219, 189, 116);
 }

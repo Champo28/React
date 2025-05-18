@@ -13,7 +13,7 @@ export const Home = () => {
 
   useEffect(() => {
     async function getAllPokemon () {
-      const res = await fetch(`${URL_POKEMON}/?offset=0&limit=1000`)
+      const res = await fetch(`${URL_POKEMON}/?offset=0&limit=1030`)
       const data = await res.json()
 
       // const promises = data.results.map(pokemon => {
@@ -38,6 +38,7 @@ export const Home = () => {
 
       const res = await fetch(`${URL_POKEMON}?offset=${x}&limit=${limit}`)
       const data = await res.json()
+      console.log(data.results)
       setArrayPokemon(data.results)
     }
 
@@ -58,12 +59,6 @@ export const Home = () => {
     <div>
       <Header getSearch={getSearch} />
 
-      <div className='card-container'>
-        {filterPokemon && filterPokemon.map(pokemon => {
-          return <PokemonCard key={pokemon.name} pokemon={pokemon} />
-        })}
-      </div>
-
       <section className='pagination'>
         <div>
           <span
@@ -78,13 +73,19 @@ export const Home = () => {
           <span> {Math.round(allPokemon?.length / 20)} </span>
           <span
             style={{ cursor: 'pointer' }} onClick={() => {
-              if (xPage < 50) setxPage(xPage + 1)
+              if (xPage < 52) setxPage(xPage + 1)
             }}
           >
             <FaIcons.FaAngleRight />
           </span>
         </div>
       </section>
+
+      <div className='card-container'>
+        {filterPokemon && filterPokemon.map(pokemon => {
+          return <PokemonCard key={pokemon.name} pokemon={pokemon} />
+        })}
+      </div>
     </div>
   )
 }

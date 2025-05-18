@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { usePokemon } from '../hooks/usePokemon'
 import '../styles/card.css'
+import shinyIcon from '../assets/shiny.png'
 
 export const PokemonCard = ({ pokemon }) => {
   const { pokemonInfo, pokemonSpecies, pokemonEvolutions } = usePokemon({ pokemon })
@@ -23,7 +24,12 @@ export const PokemonCard = ({ pokemon }) => {
             src={shiny ? pokemonInfo.sprites.front_shiny : pokemonInfo.sprites.front_default} alt='pokemon'
           />
           <div className={`bg-${pokemonInfo.types[0].type.name} sub-card`}>
-            <strong className='poke-id'>{formatId(pokemonInfo.id)}</strong>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <strong className='poke-id'>{formatId(pokemonInfo.id)}</strong>
+              <button className='shiny-button' onClick={() => setShiny(!shiny)}>
+                <img className='shiny-img' src={shinyIcon} />
+              </button>
+            </div>
             <strong className='poke-name'>{pokemonInfo.name}</strong>
             <h4 className='poke-height'>
               Height: {pokemonInfo.height / 10} m
@@ -32,7 +38,7 @@ export const PokemonCard = ({ pokemon }) => {
               Weight: {pokemonInfo.weight / 10} kg
             </h4>
             <h4 className='poke-habitat'>
-              Habitat: {pokemonSpecies.habitat.name}
+              Habitat: {pokemonSpecies.habitat?.name}
             </h4>
             <div className='poke-stats'>
               {pokemonInfo?.stats.map((stat, index) => {
@@ -50,7 +56,6 @@ export const PokemonCard = ({ pokemon }) => {
                 return <h6 key={index} className={`bg-${type.type.name} color-type`}>{type.type.name}</h6>
               })}
             </div>
-            <button onClick={() => setShiny(!shiny)}>Shiny form</button>
             <div className='poke-evolutions'>
               {pokemonEvolutions?.map((evolution, index) => (
                 <div key={index} className='evolution-container'>

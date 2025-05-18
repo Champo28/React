@@ -6,17 +6,19 @@ export function usePokemon ({ pokemon }) {
   const [pokemonSpecies, setPokemonSpecies] = useState()
   const [pokemonEvolutions, setPokemonEvolutions] = useState([])
 
-  const getPokemonImage = async (name) => {
-    const res = await fetch(`${URL_POKEMON}/${name}`)
+  const getPokemonImage = async (url) => {
+    const id = url.split('/')[6]
+    const res = await fetch(`${URL_POKEMON}/${id}`)
     const data = await res.json()
     return data.sprites.front_default
   }
 
   useEffect(() => {
     async function getPokemonInfo () {
+      // const id = pokemon.url.split('/')[6]
       const res = await fetch(`${URL_POKEMON}/${pokemon.name}`)
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       setPokemonInfo(data)
     }
 
@@ -28,7 +30,7 @@ export function usePokemon ({ pokemon }) {
       const url = pokemon.url.split('/')
       const res = await fetch(`${URL_SPECIES}/${url[6]}`)
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       setPokemonSpecies(data)
     }
 
@@ -46,22 +48,25 @@ export function usePokemon ({ pokemon }) {
       const data = await res.json()
       const { chain } = data
 
-      console.log(chain)
+      // console.log(chain)
 
       let name = chain.species.name
-      let img = await getPokemonImage(name)
+      let evolutionUrl = chain.species.url
+      let img = await getPokemonImage(evolutionUrl)
 
       evolutionsArr.push({ img, name })
 
       if (chain.evolves_to.length !== 0) {
         name = chain.evolves_to[0].species.name
-        img = await getPokemonImage(name)
+        evolutionUrl = chain.evolves_to[0].species.url
+        img = await getPokemonImage(evolutionUrl)
 
         evolutionsArr.push({ img, name })
 
         if (chain.evolves_to[0].evolves_to.length !== 0) {
           name = chain.evolves_to[0].evolves_to[0].species.name
-          img = await getPokemonImage(name)
+          evolutionUrl = chain.evolves_to[0].evolves_to[0].species.url
+          img = await getPokemonImage(evolutionUrl)
 
           evolutionsArr.push({ img, name })
         }
