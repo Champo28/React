@@ -65,14 +65,63 @@ function App() {
 	const [board, setBoard] = useState(initializeBoard())
 	const [selected, setSelected] = useState(null)
 
+	
+	const generatePawnValidMoves = (pawn) => {
+		let moves = []
+		let row = selected.row, col = selected.col
+
+		if (col !== 0) {
+			if (board[row - 1][col - 1] !== null && board[row - 1][col - 1].color !== pawn.color) moves.push({ x: row - 1, y: col - 1 })
+		}
+		
+		if (col !== 7) {
+			if (board[row - 1][col + 1] !== null && board[row - 1][col + 1].color !== pawn.color) moves.push({ x: row - 1, y: col + 1 })
+		}
+		
+		if (pawn.firstMove && board[row - 2][col] === null) moves.push({ x: row - 2, y: col })
+		if (board[row - 1][col] === null) moves.push({ x: row - 1, y: col })
+		
+		console.log(moves)
+		return moves
+	} 
+
+	const pawnLogic = (pawn, target) => {
+		const validMoves = generatePawnValidMoves(pawn)
+		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
+			pawn.firstMove = false
+			return true
+		}
+		return false
+	}
+
+	const validateMove = (piece, target) => {
+		console.log(target)
+		switch (piece.type) {
+			case "r": return rockLogic()
+			case "n": return knightLogic()
+			case "b": return bishopLogic()
+			case "k": return kingLogic()
+			case "q": return queenLogic()
+			case "p": return pawnLogic(piece, target)
+			default: false
+		}
+	}
+
 	const handleClick = (x, y) => {
-		if (selected == null) setSelected({row: x, col: y})
+		if (selected === null) setSelected({row: x, col: y})
+		// Same square selected
 		else if (selected.row === x && selected.col === y) setSelected(null)
+		// Two empty squares selected
+		else if (board[selected.row][selected.col] === null && board[x][y] === null) setSelected(null)
+		// Empty square selected then piece selected
+		else if (board[selected.row][selected.col] === null && board[x][y] !== null) setSelected(null)
 		else {
-			let newBoard = board.map(row => [...row])
-			newBoard[x][y] = newBoard[selected.row][selected.col]
-			newBoard[selected.row][selected.col] = null
-			setBoard(newBoard)
+			if (validateMove(board[selected.row][selected.col], {x, y})) {
+				let newBoard = board.map(row => [...row])
+				newBoard[x][y] = newBoard[selected.row][selected.col]
+				newBoard[selected.row][selected.col] = null
+				setBoard(newBoard)
+			}
 			setSelected(null) 
 		}
 	}
