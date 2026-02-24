@@ -94,11 +94,59 @@ function App() {
 		return false
 	}
 
+	const generateKnightValidMoves = (knight) => {
+		let moves = []
+		let row = selected.row, col = selected.col
+
+		if ((row - 2 >= 0 && col + 1 <= 7) && (board[row - 2][col + 1] === null || board[row - 2][col + 1].color !== knight.color)) {
+			moves.push({ x: row - 2, y: col + 1 })
+		} 
+
+		if ((row - 1 >= 0 && col + 2 <= 7) && (board[row - 1][col + 2] === null || board[row - 1][col + 2].color !== knight.color)) {
+			moves.push({ x: row - 1, y: col + 2 })
+		}
+		 
+		if ((row + 1 <= 7 && col + 2 <= 7) && (board[row + 1][col + 2] === null || board[row + 1][col + 2].color !== knight.color)) {
+			moves.push({ x: row + 1, y: col + 2 })
+		} 
+
+		if ((row + 2 <= 7 && col + 1 <= 7) && (board[row + 2][col + 1] === null || board[row + 2][col + 1].color !== knight.color)) {
+			moves.push({ x: row + 2, y: col + 1 })
+		}
+
+		if ((row + 2 <= 7 && col - 1 >= 0) && (board[row + 2][col - 1] === null || board[row + 2][col - 1].color !== knight.color)) {
+			moves.push({ x: row + 2, y: col - 1 })
+		}
+
+		if ((row + 1 <= 7 && col - 2 >= 0) && (board[row + 1][col - 2] === null || board[row + 1][col - 2].color !== knight.color)) {
+			moves.push({ x: row + 1, y: col - 2 })
+		}
+
+		if ((row - 1 >= 0 && col - 2 >= 0) && (board[row - 1][col - 2] === null || board[row - 1][col - 2].color !== knight.color)) {
+			moves.push({ x: row - 1, y: col - 2 })
+		} 
+
+		if ((row - 2 >= 0 && col - 1 >= 0) && (board[row - 2][col - 1] === null || board[row - 2][col - 1].color !== knight.color)) {
+			moves.push({ x: row - 2, y: col - 1 })
+		} 
+		console.log(moves)
+		return moves
+	}
+
+	const knightLogic = (knight, target) => {
+		const validMoves = generateKnightValidMoves(knight)
+		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
+			knight.firstMove = false
+			return true
+		}
+		return false
+	}
+
 	const validateMove = (piece, target) => {
 		console.log(target)
 		switch (piece.type) {
 			case "r": return rockLogic()
-			case "n": return knightLogic()
+			case "n": return knightLogic(piece, target)
 			case "b": return bishopLogic()
 			case "k": return kingLogic()
 			case "q": return queenLogic()
