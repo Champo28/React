@@ -18,31 +18,31 @@ const initializeBoard = () => {
 		}
 	}
 	// Black pieces
-	board[0][0] = new Piece("r", "black", true);
-	board[0][1] = new Piece("n", "black", true);
-	board[0][2] = new Piece("b", "black", true);
-	board[0][3] = new Piece("q", "black", true);
-	board[0][4] = new Piece("k", "black", true);
-	board[0][5] = new Piece("b", "black", true);
-	board[0][6] = new Piece("n", "black", true);
-	board[0][7] = new Piece("r", "black", true);
+	board[0][0] = new Piece("r", "black", true)
+	board[0][1] = new Piece("n", "black", true)
+	board[0][2] = new Piece("b", "black", true)
+	board[0][3] = new Piece("q", "black", true)
+	board[0][4] = new Piece("k", "black", true)
+	board[0][5] = new Piece("b", "black", true)
+	board[0][6] = new Piece("n", "black", true)
+	board[0][7] = new Piece("r", "black", true)
 
 	for (let i = 0; i < 8; i++) {
-		board[1][i] = new Piece("p", "black", true);
+		board[1][i] = new Piece("p", "black", true)
 	}
 	
 	// White pieces
-	board[7][0] = new Piece("r", "white", true);
-	board[7][1] = new Piece("n", "white", true);
-	board[7][2] = new Piece("b", "white", true);
-	board[7][3] = new Piece("q", "white", true);
-	board[7][4] = new Piece("k", "white", true);
-	board[7][5] = new Piece("b", "white", true);
-	board[7][6] = new Piece("n", "white", true);
-	board[7][7] = new Piece("r", "white", true);
+	board[7][0] = new Piece("r", "white", true)
+	board[7][1] = new Piece("n", "white", true)
+	board[7][2] = new Piece("b", "white", true)
+	board[7][3] = new Piece("q", "white", true)
+	board[7][4] = new Piece("k", "white", true)
+	board[7][5] = new Piece("b", "white", true)
+	board[7][6] = new Piece("n", "white", true)
+	board[7][7] = new Piece("r", "white", true)
 
 	for (let i = 0; i < 8; i++) {
-		board[6][i] = new Piece("p", "white", true);
+		board[6][i] = new Piece("p", "white", true)
 	}
 
 	return board
@@ -191,14 +191,79 @@ function App() {
 		return false
 	}
 
+	const generateBishopValidMoves = (bishop) => {
+		let moves = []
+		const row = selected.row, col = selected.col
+
+		let i = row - 1, j = col - 1
+		
+		while (i >= 0 && j >= 0) {
+			if (board[i][j] === null) moves.push({ x: i, y: j })
+			else {
+				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
+				break
+			}
+			i--
+			j--
+		}
+
+		i = row + 1, j = col - 1
+
+		while (i <= 7 && j >= 0) {
+			if (board[i][j] === null) moves.push({ x: i, y: j })
+			else {
+				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
+				break
+			}
+			i++
+			j--
+		}
+
+		i = row + 1, j = col + 1
+
+		while (i <= 7 && j <= 7) {
+			if (board[i][j] === null) moves.push({ x: i, y: j })
+			else {
+				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
+				break
+			}
+			i++
+			j++
+		}
+
+		i = row - 1, j = col + 1
+
+		while (i >= 0 && j <= 7) {
+			if (board[i][j] === null) moves.push({ x: i, y: j })
+			else {
+				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
+				break
+			}
+			i--
+			j++
+		}
+
+		console.log(moves)
+		return moves
+	}
+
+	const bishopLogic = (bishop, target) => {
+		const validateMove = generateBishopValidMoves(bishop)
+		if (validateMove.some(square => square.x == target.x && square.y == target.y)) {
+			bishop.firstMove = true
+			return true
+		}
+		return false
+	}
+
 	const validateMove = (piece, target) => {
 		console.log(target)
 		switch (piece.type) {
 			case "r": return rookLogic(piece, target)
 			case "n": return knightLogic(piece, target)
-			case "b": return bishopLogic()
-			case "k": return kingLogic()
-			case "q": return queenLogic()
+			case "b": return bishopLogic(piece, target)
+			case "k": return kingLogic(piece, target)
+			case "q": return queenLogic(piece, target)
 			case "p": return pawnLogic(piece, target)
 			default: false
 		}
