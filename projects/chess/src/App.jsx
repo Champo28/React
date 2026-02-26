@@ -65,21 +65,35 @@ function App() {
 	const [board, setBoard] = useState(initializeBoard())
 	const [selected, setSelected] = useState(null)
 
-	
 	const generatePawnValidMoves = (pawn) => {
 		let moves = []
 		let row = selected.row, col = selected.col
 
-		if (col !== 0) {
-			if (board[row - 1][col - 1] !== null && board[row - 1][col - 1].color !== pawn.color) moves.push({ x: row - 1, y: col - 1 })
+		if (pawn.color === "white") {
+			if (col !== 0) {
+				if (board[row - 1][col - 1] !== null && board[row - 1][col - 1].color !== pawn.color) moves.push({ x: row - 1, y: col - 1 })
+			}
+			
+			if (col !== 7) {
+				if (board[row - 1][col + 1] !== null && board[row - 1][col + 1].color !== pawn.color) moves.push({ x: row - 1, y: col + 1 })
+			}
+			
+			if (pawn.firstMove && board[row - 2][col] === null) moves.push({ x: row - 2, y: col })
+			if (board[row - 1][col] === null) moves.push({ x: row - 1, y: col })
 		}
 		
-		if (col !== 7) {
-			if (board[row - 1][col + 1] !== null && board[row - 1][col + 1].color !== pawn.color) moves.push({ x: row - 1, y: col + 1 })
+		else {
+			if (col !== 7) {
+				if (board[row + 1][col + 1] !== null && board[row + 1][col + 1].color !== pawn.color) moves.push({ x: row + 1, y: col + 1 })
+			}
+			
+			if (col !== 0) {
+				if (board[row + 1][col - 1] !== null && board[row + 1][col - 1].color !== pawn.color) moves.push({ x: row + 1, y: col - 1 })
+			}
+			
+			if (pawn.firstMove && board[row + 2][col] === null) moves.push({ x: row + 2, y: col })
+			if (board[row + 1][col] === null) moves.push({ x: row + 1, y: col })
 		}
-		
-		if (pawn.firstMove && board[row - 2][col] === null) moves.push({ x: row - 2, y: col })
-		if (board[row - 1][col] === null) moves.push({ x: row - 1, y: col })
 		
 		console.log(moves)
 		return moves
