@@ -1,5 +1,11 @@
 import { useState } from 'react'
 import './App.css'
+import { getPawnValidMoves } from './logic/pawn'
+import { getKnightValidMoves } from './logic/knight'
+import { getBishopValidMoves } from './logic/bishop'
+import { getRookValidMoves } from './logic/rook'
+import { getQueenValidMoves } from './logic/queen'
+import { getKingValidMoves } from './logic/king'
 
 class Piece {
 	constructor(type, color, firstMove = false) {
@@ -65,290 +71,29 @@ function App() {
 	const [board, setBoard] = useState(initializeBoard())
 	const [selected, setSelected] = useState(null)
 
-	const generatePawnValidMoves = (pawn) => {
-		let moves = []
-		let row = selected.row, col = selected.col
-
-		if (pawn.color === "white") {
-			if (col !== 0) {
-				if (board[row - 1][col - 1] !== null && board[row - 1][col - 1].color !== pawn.color) moves.push({ x: row - 1, y: col - 1 })
-			}
-			
-			if (col !== 7) {
-				if (board[row - 1][col + 1] !== null && board[row - 1][col + 1].color !== pawn.color) moves.push({ x: row - 1, y: col + 1 })
-			}
-			
-			if (pawn.firstMove && board[row - 2][col] === null) moves.push({ x: row - 2, y: col })
-			if (board[row - 1][col] === null) moves.push({ x: row - 1, y: col })
-		}
-		
-		else {
-			if (col !== 7) {
-				if (board[row + 1][col + 1] !== null && board[row + 1][col + 1].color !== pawn.color) moves.push({ x: row + 1, y: col + 1 })
-			}
-			
-			if (col !== 0) {
-				if (board[row + 1][col - 1] !== null && board[row + 1][col - 1].color !== pawn.color) moves.push({ x: row + 1, y: col - 1 })
-			}
-			
-			if (pawn.firstMove && board[row + 2][col] === null) moves.push({ x: row + 2, y: col })
-			if (board[row + 1][col] === null) moves.push({ x: row + 1, y: col })
-		}
-		
-		console.log(moves)
-		return moves
-	} 
-
-	const pawnLogic = (pawn, target) => {
-		const validMoves = generatePawnValidMoves(pawn)
-		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
-			pawn.firstMove = false
-			return true
-		}
-		return false
+	const validateMove = (board, row, col, target) => {
+		const validMoves = getValidMoves(board, row, col)
+		return validMoves.some(square => square.x == target.x && square.y == target.y)
 	}
 
-	const generateKnightValidMoves = (knight) => {
-		let moves = []
-		let row = selected.row, col = selected.col
+	const getValidMoves = (board, row, col) => {
+		const piece = board[row][col]
 
-		if ((row - 2 >= 0 && col + 1 <= 7) && (board[row - 2][col + 1] === null || board[row - 2][col + 1].color !== knight.color)) {
-			moves.push({ x: row - 2, y: col + 1 })
-		} 
+		if (!piece) return []
 
-		if ((row - 1 >= 0 && col + 2 <= 7) && (board[row - 1][col + 2] === null || board[row - 1][col + 2].color !== knight.color)) {
-			moves.push({ x: row - 1, y: col + 2 })
-		}
-		 
-		if ((row + 1 <= 7 && col + 2 <= 7) && (board[row + 1][col + 2] === null || board[row + 1][col + 2].color !== knight.color)) {
-			moves.push({ x: row + 1, y: col + 2 })
-		} 
-
-		if ((row + 2 <= 7 && col + 1 <= 7) && (board[row + 2][col + 1] === null || board[row + 2][col + 1].color !== knight.color)) {
-			moves.push({ x: row + 2, y: col + 1 })
-		}
-
-		if ((row + 2 <= 7 && col - 1 >= 0) && (board[row + 2][col - 1] === null || board[row + 2][col - 1].color !== knight.color)) {
-			moves.push({ x: row + 2, y: col - 1 })
-		}
-
-		if ((row + 1 <= 7 && col - 2 >= 0) && (board[row + 1][col - 2] === null || board[row + 1][col - 2].color !== knight.color)) {
-			moves.push({ x: row + 1, y: col - 2 })
-		}
-
-		if ((row - 1 >= 0 && col - 2 >= 0) && (board[row - 1][col - 2] === null || board[row - 1][col - 2].color !== knight.color)) {
-			moves.push({ x: row - 1, y: col - 2 })
-		} 
-
-		if ((row - 2 >= 0 && col - 1 >= 0) && (board[row - 2][col - 1] === null || board[row - 2][col - 1].color !== knight.color)) {
-			moves.push({ x: row - 2, y: col - 1 })
-		} 
-		console.log(moves)
-		return moves
-	}
-
-	const knightLogic = (knight, target) => {
-		const validMoves = generateKnightValidMoves(knight)
-		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
-			knight.firstMove = false
-			return true
-		}
-		return false
-	}
-
-	const generateRookValideMoves = (rook) => {
-		let moves = []
-		const row = selected.row, col = selected.col
-
-		for (let i = row + 1; i <= 7; i++) { 
-			if (board[i][col] === null) moves.push({ x: i, y: col })
-			else {
-				if (board[i][col].color !== rook.color) moves.push({ x: i, y: col })
-				break
-			}
-		}
-
-		for (let i = row - 1; i >= 0; i--) { 
-			if (board[i][col] === null) moves.push({ x: i, y: col })
-			else {
-				if (board[i][col].color !== rook.color) moves.push({ x: i, y: col })
-				break
-			}
-		}
-
-		for (let i = col + 1; i <= 7; i++) { 
-			if (board[row][i] === null) moves.push({ x: row, y: i })
-			else {
-				if (board[row][i].color !== rook.color) moves.push({ x: row, y: i })
-				break
-			}
-		}
-
-		for (let i = col - 1; i >= 0; i--) { 
-			if (board[row][i] === null) moves.push({ x: row, y: i })
-			else {
-				if (board[row][i].color !== rook.color) moves.push({ x: row, y: i })
-				break
-			}
-		}
-
-		console.log(moves)
-		return moves
-	}
-
-	const rookLogic = (rook, target) => {
-		const validMoves = generateRookValideMoves(rook)
-		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
-			rook.firstMove = false;
-			return true
-		}
-		return false
-	}
-
-	const generateBishopValidMoves = (bishop) => {
-		let moves = []
-		const row = selected.row, col = selected.col
-
-		let i = row - 1, j = col - 1
-		
-		while (i >= 0 && j >= 0) {
-			if (board[i][j] === null) moves.push({ x: i, y: j })
-			else {
-				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
-				break
-			}
-			i--
-			j--
-		}
-
-		i = row + 1, j = col - 1
-
-		while (i <= 7 && j >= 0) {
-			if (board[i][j] === null) moves.push({ x: i, y: j })
-			else {
-				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
-				break
-			}
-			i++
-			j--
-		}
-
-		i = row + 1, j = col + 1
-
-		while (i <= 7 && j <= 7) {
-			if (board[i][j] === null) moves.push({ x: i, y: j })
-			else {
-				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
-				break
-			}
-			i++
-			j++
-		}
-
-		i = row - 1, j = col + 1
-
-		while (i >= 0 && j <= 7) {
-			if (board[i][j] === null) moves.push({ x: i, y: j })
-			else {
-				if (board[i][j].color !== bishop.color) moves.push({ x: i, y: j })
-				break
-			}
-			i--
-			j++
-		}
-
-		console.log(moves)
-		return moves
-	}
-
-	const bishopLogic = (bishop, target) => {
-		const validateMove = generateBishopValidMoves(bishop)
-		if (validateMove.some(square => square.x === target.x && square.y === target.y)) {
-			bishop.firstMove = true
-			return true
-		}
-		return false
-	}
-
-	const generateQueenValidMoves = (queen) => {
-		let moves = generateBishopValidMoves(queen)
-		moves.push(generateRookValideMoves(queen))
-		console.log(moves)
-		return moves
-	}
-
-	const queenLogic = (queen, target) => {
-		const validMoves = generateQueenValidMoves(queen)
-		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
-			queen.firstMove = true
-			return true
-		}
-		return false
-	}
-	const generateKingValidMoves = (king) => {
-		let moves = []
-		const row = selected.row, col = selected.col
-
-		if (row - 1 >= 0 && col - 1 >= 0) {
-			if (board[row - 1][col - 1] === null || board[row - 1][col - 1].color !== king.color) moves.push({ x: row - 1, y: col - 1})
-		}
-
-		if (row - 1 >= 0) {
-			if (board[row - 1][col] === null || board[row - 1][col].color !== king.color) moves.push({ x: row - 1, y: col })
-		}
-
-		if (row - 1 >= 0 && col + 1 <= 7) {
-			if (board[row - 1][col + 1] === null || board[row - 1][col + 1].color !== king.color) moves.push({ x: row - 1, y: col + 1})
-		}
-
-		if (col + 1 <= 7) {
-			if (board[row][col + 1] === null || board[row][col + 1].color !== king.color) moves.push({ x: row, y: col + 1})
-		}
-
-		if (row + 1 <= 7 && col + 1 <= 7) {
-			if (board[row + 1][col + 1] === null || board[row + 1][col + 1].color !== king.color) moves.push({ x: row + 1, y: col + 1})
-		}
-
-		if (row + 1 <= 7) {
-			if (board[row + 1][col] === null || board[row + 1][col].color !== king.color) moves.push({ x: row + 1, y: col })
-		}
-
-		if (row + 1 <= 7 && col - 1 >= 0) {
-			if (board[row + 1][col - 1] === null || board[row + 1][col - 1].color !== king.color) moves.push({ x: row + 1, y: col - 1})
-		}
-
-		if (col - 1 >= 0) {
-			if (board[row][col - 1] === null || board[row][col - 1].color !== king.color) moves.push({ x: row, y: col - 1})
-		}
-
-		console.log(moves)
-		return moves
-	}
-
-	const kingLogic = (king, target) => {
-		const validMoves = generateKingValidMoves(king)
-		if (validMoves.some(square => square.x === target.x && square.y === target.y)) {
-			king.firstMove = true
-			return true
-		}
-		return false
-	}
-
-	const validateMove = (piece, target) => {
-		console.log(target)
 		switch (piece.type) {
-			case "r": return rookLogic(piece, target)
-			case "n": return knightLogic(piece, target)
-			case "b": return bishopLogic(piece, target)
-			case "k": return kingLogic(piece, target)
-			case "q": return queenLogic(piece, target)
-			case "p": return pawnLogic(piece, target)
-			default: false
+			case "r": return getRookValidMoves(board, row, col)
+			case "n": return getKnightValidMoves(board, row, col)
+			case "b": return getBishopValidMoves(board, row, col)
+			case "k": return getKingValidMoves(board, row, col)
+			case "q": return getQueenValidMoves(board, row, col)
+			case "p": return getPawnValidMoves(board, row, col)
+			default: []
 		}
 	}
 
 	const handleClick = (x, y) => {
-		if (selected === null) setSelected({row: x, col: y})
+		if (selected === null) setSelected({ row: x, col: y })
 		// Same square selected
 		else if (selected.row === x && selected.col === y) setSelected(null)
 		// Two empty squares selected
@@ -356,9 +101,10 @@ function App() {
 		// Empty square selected then piece selected
 		else if (board[selected.row][selected.col] === null && board[x][y] !== null) setSelected(null)
 		else {
-			if (validateMove(board[selected.row][selected.col], {x, y})) {
+			if (validateMove(board, selected.row, selected.col, { x, y })) {
 				let newBoard = board.map(row => [...row])
 				newBoard[x][y] = newBoard[selected.row][selected.col]
+				newBoard[x][y].firstMove = false
 				newBoard[selected.row][selected.col] = null
 				setBoard(newBoard)
 			}
